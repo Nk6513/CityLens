@@ -1,31 +1,36 @@
-import React from 'react';
+const WeatherCard = ({ weatherData }) => {
+  if (!weatherData) return null;
 
-const WeatherCard = () => {
+  const { name, weather, main, wind } = weatherData;
+  const icon = weather[0].icon;
+
   return (
-    <div className="max-w-sm bg-white shadow-lg rounded-xl p-6 m-4 text-center">
-      <h2 className="text-2xl font-bold mb-2">City Name</h2>
-      <p className="text-gray-500 mb-4">Sunny • 25°C</p>
+    <div className="max-w-4xl w-full bg-gradient-to-r from-blue-300 via-blue-50 to-white shadow-2xl rounded-2xl p-10 m-6 text-center transition-transform transform hover:scale-105">
+      <h2 className="text-4xl font-extrabold mb-4 text-blue-900">{name}</h2>
+      <p className="text-xl text-gray-600 mb-6">
+        {weather[0].description} • {main.temp}°C
+      </p>
 
-      <div className="flex justify-center items-center mb-4">
+      <div className="flex justify-center items-center mb-6">
         <img
-          src="https://openweathermap.org/img/wn/01d@2x.png"
+          src={`https://openweathermap.org/img/wn/${icon}@4x.png`}
           alt="weather icon"
-          className="w-20 h-20"
+          className="w-32 h-32"
         />
       </div>
 
-      <div className="flex justify-around text-gray-700 mt-4">
+      <div className="flex justify-around text-gray-700 mt-6 space-x-8">
         <div>
-          <p className="font-semibold">Humidity</p>
-          <p>60%</p>
+          <p className="font-semibold text-lg mb-1">Humidity</p>
+          <p className="text-lg">{main.humidity}%</p>
         </div>
         <div>
-          <p className="font-semibold">Wind</p>
-          <p>15 km/h</p>
+          <p className="font-semibold text-lg mb-1">Wind</p>
+          <p className="text-lg">{wind.speed} km/h</p>
         </div>
         <div>
-          <p className="font-semibold">Pressure</p>
-          <p>1012 hPa</p>
+          <p className="font-semibold text-lg mb-1">Pressure</p>
+          <p className="text-lg">{main.pressure} hPa</p>
         </div>
       </div>
     </div>

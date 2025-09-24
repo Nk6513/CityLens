@@ -1,39 +1,28 @@
-import React from "react";
+const SearchBar = ({ value, onChange, onSearch }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();   // prevent page reload
+    onSearch();           // call the search function
+  };
 
-<<<<<<< HEAD
-
-const SearchBar = ({onChange, value}) => {
-
-=======
-const SearchBar = ({ onChange, value }) => {
->>>>>>> b6d87bea5280460cf4fd4623d09ab0514cc074a5
   return (
-    <div className="flex justify-center mt-6">
+    <form
+      onSubmit={handleSubmit}
+      className="flex justify-center mt-6"
+    >
       <input
-        onChange={onChange}
-        value={value}
         type="text"
+        value={value}
+        onChange={onChange}
         placeholder="Enter city..."
         className="px-4 py-2 rounded-l-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-<<<<<<< HEAD
-      /> 
-      <button 
+      />
+      <button
+        type="submit" // important!
         className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 transition-colors"
       >
         Search
       </button>
-      
-=======
-      />
-      <button className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 transition-colors">
-        Search
-      </button>
-
-      <p style={{ color: "blue", marginTop: "7px", marginLeft: "7px" }}>
-        You typed: {value}
-      </p>
->>>>>>> b6d87bea5280460cf4fd4623d09ab0514cc074a5
-    </div>
+    </form>
   );
 };
 

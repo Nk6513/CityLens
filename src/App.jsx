@@ -2,12 +2,7 @@
 // |---------- Weather App -------- |
 //================================================================
 
-import React from "react";
-<<<<<<< HEAD
-import { useState } from "react";
-=======
-import { useState, useEffect } from "react";
->>>>>>> b6d87bea5280460cf4fd4623d09ab0514cc074a5
+import React, { useState } from "react";
 import "./index.css";
 
 //----------------------------------------------------------------
@@ -23,30 +18,48 @@ import Footer from "./components/Footer";
 //----------------------------------------------------------------
 //  App ----------------
 //----------------------------------------------------------------
-<<<<<<< HEAD
-export default function App() { 
-  // Capture usertext from search bar 
-  const [inputSearch, setInputSearch] = useState("");
-  const handleChange = (e) => {
-    setInputSearch(e.target.value);
-    //console.log(inputSearch);
-=======
+
 export default function App() {
-  // Using useState to capture input from search box
+  // Capture user text from search bar
   const [inputSearch, setInputSearch] = useState("");
+  const [weatherData, setWeatherData]= useState(null);
 
   const handleChange = (e) => {
     setInputSearch(e.target.value);
->>>>>>> b6d87bea5280460cf4fd4623d09ab0514cc074a5
+    // console.log(inputSearch);
+  };
+
+  const handleSearch = async () => {
+    if(!inputSearch) return;
+    const data = await fetchWeather(inputSearch);
+    setWeatherData(data);
+  };
+
+  // API that will pick the weather
+
+  const fetchWeather = async (city) => {
+    const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    try{
+      const response= await fetch(url);
+      if(!response.ok) throw new Error('city not found');
+      const data= await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return null;
+
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-6 space-y-6">
-        <SearchBar onChange={handleChange} value={inputSearch} />
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <WeatherCard />
+        <SearchBar onChange={handleChange} value={inputSearch} onSearch={handleSearch} />
+        <div className="flex justify-center mt-6">
+          <WeatherCard weatherData = {weatherData} />
           <WeatherCard />
           <WeatherCard />
         </div>
