@@ -3,7 +3,11 @@
 //================================================================
 
 import React from "react";
+<<<<<<< HEAD
 import { useState } from "react";
+=======
+import { useState, useEffect } from "react";
+>>>>>>> b6d87bea5280460cf4fd4623d09ab0514cc074a5
 import "./index.css";
 
 //----------------------------------------------------------------
@@ -19,12 +23,21 @@ import Footer from "./components/Footer";
 //----------------------------------------------------------------
 //  App ----------------
 //----------------------------------------------------------------
+<<<<<<< HEAD
 export default function App() { 
   // Capture usertext from search bar 
   const [inputSearch, setInputSearch] = useState("");
   const handleChange = (e) => {
     setInputSearch(e.target.value);
     //console.log(inputSearch);
+=======
+export default function App() {
+  // Using useState to capture input from search box
+  const [inputSearch, setInputSearch] = useState("");
+
+  const handleChange = (e) => {
+    setInputSearch(e.target.value);
+>>>>>>> b6d87bea5280460cf4fd4623d09ab0514cc074a5
   };
 
   return (
