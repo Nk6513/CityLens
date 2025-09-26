@@ -1,10 +1,12 @@
 const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md">
+      {/* Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
+          
           {/* Logo / App Name */}
-          <a href="#" className="flex items-center space-x-2">
+          <a href="app.jsx" className="flex items-center space-x-2">
             <svg
               className="w-8 h-8 text-white"
               xmlns="http://www.w3.org/2000/svg"
@@ -16,32 +18,11 @@ const Navbar = () => {
             <span className="text-xl font-bold text-white">WeatherApp</span>
           </a>
 
-          {/* Links */}
+          {/* Desktop Links */}
           <div className="hidden md:flex space-x-6">
-            <a
-              href="#"
-              className="text-white hover:text-yellow-300 transition-colors"
-            >
-              Home
-            </a>
-            <a
-              href="#"
-              className="text-white hover:text-yellow-300 transition-colors"
-            >
-              Forecast
-            </a>
-            <a
-              href="#"
-              className="text-white hover:text-yellow-300 transition-colors"
-            >
-              Maps
-            </a>
-            <a
-              href="#"
-              className="text-white hover:text-yellow-300 transition-colors"
-            >
-              About
-            </a>
+            <a href="app.jsx" className="text-white hover:text-yellow-300 transition-colors">Home</a>
+            <a href="#" className="text-white hover:text-yellow-300 transition-colors">Maps</a>
+            <a href="#" className="text-white hover:text-yellow-300 transition-colors">About</a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -69,32 +50,11 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Links (UI only, hidden by default) */}
+      {/* Mobile Links (hidden by default) */}
       <div className="md:hidden hidden px-2 pt-2 pb-3 space-y-1">
-        <a
-          href="#"
-          className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
-        >
-          Home
-        </a>
-        <a
-          href="#"
-          className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
-        >
-          Forecast
-        </a>
-        <a
-          href="#"
-          className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
-        >
-          Maps
-        </a>
-        <a
-          href="#"
-          className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
-        >
-          About
-        </a>
+        <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500">Home</a>
+        <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500">Maps</a>
+        <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500">About</a>
       </div>
     </nav>
   );

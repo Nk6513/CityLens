@@ -1,36 +1,99 @@
-const WeatherCard = ({ weatherData }) => {
+const WeatherCard = ({ weatherData, error }) => {
+  // --------------------------------------------------
+  // Handle error and empty states
+  // --------------------------------------------------
+  if (error) {
+    return (
+      <div className="max-w-4xl w-full bg-red-100 text-red-800 shadow-lg rounded-2xl p-6 m-6 text-center">
+        <p className="text-xl font-semibold">⚠️ {error}</p>
+      </div>
+    );
+  }
+
   if (!weatherData) return null;
 
-  const { name, weather, main, wind } = weatherData;
-  const icon = weather[0].icon;
+  // --------------------------------------------------
+  // Detect API type (forecast or current)
+  // --------------------------------------------------
+  const isForecast = Array.isArray(weatherData.list);
+  const city = isForecast ? weatherData.city : weatherData;
 
+  // --------------------------------------------------
+  // Extract values safely
+  // --------------------------------------------------
+  const cityName = city?.name;
+  const country = city?.country || city?.sys?.country;
+  const lat = city?.coord?.lat;
+  const lon = city?.coord?.lon;
+
+  const firstItem = isForecast ? weatherData.list?.[0] : weatherData;
+
+  const date = isForecast
+    ? firstItem?.dt_txt && new Date(firstItem.dt_txt.replace(" ", "T"))
+    : firstItem?.dt && new Date(firstItem.dt * 1000);
+
+  const { temp, temp_min, temp_max, humidity } = firstItem?.main || {};
+  const windSpeed = firstItem?.wind?.speed;
+  const weather = firstItem?.weather?.[0];
+  const icon = weather?.icon;
+
+  // --------------------------------------------------
+  // Render
+  // --------------------------------------------------
   return (
     <div className="max-w-4xl w-full bg-gradient-to-r from-blue-300 via-blue-50 to-white shadow-2xl rounded-2xl p-10 m-6 text-center transition-transform transform hover:scale-105">
-      <h2 className="text-4xl font-extrabold mb-4 text-blue-900">{name}</h2>
-      <p className="text-xl text-gray-600 mb-6">
-        {weather[0].description} • {main.temp}°C
+      <h2 className="text-4xl font-extrabold mb-2 text-blue-900">
+        {cityName}, {country}
+      </h2>
+
+      {date && (
+        <p className="text-lg text-gray-600 mb-4">{date.toLocaleString()}</p>
+      )}
+
+      <p className="text-xl text-gray-700 mb-6">
+        {weather?.description} • {temp}°C
       </p>
 
-      <div className="flex justify-center items-center mb-6">
-        <img
-          src={`https://openweathermap.org/img/wn/${icon}@4x.png`}
-          alt="weather icon"
-          className="w-32 h-32"
-        />
-      </div>
+      {icon && (
+        <div className="flex justify-center items-center mb-6">
+          <img
+            src={`https://openweathermap.org/img/wn/${icon}@4x.png`}
+            alt="weather icon"
+            className="w-32 h-32"
+          />
+        </div>
+      )}
 
-      <div className="flex justify-around text-gray-700 mt-6 space-x-8">
+      {lat && lon && (
+        <p className="text-sm text-blue-600 text-center mb-6">
+          📍{" "}
+          <a
+            href={`https://www.google.com/maps?q=${lat},${lon}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-blue-800"
+          >
+            Lat: {lat}, Lon: {lon}
+          </a>
+        </p>
+      )}
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-gray-700 mt-6">
+        <div>
+          <p className="font-semibold text-lg mb-1">Min Temp</p>
+          <p className="text-lg text-blue-600">{temp_min}°C</p>
+        </div>
+        <div>
+          <p className="font-semibold text-lg mb-1">Max Temp</p>
+          <p className="text-lg text-red-600">{temp_max}°C</p>
+        </div>
         <div>
           <p className="font-semibold text-lg mb-1">Humidity</p>
-          <p className="text-lg">{main.humidity}%</p>
+          <p className="text-lg">{humidity}%</p>
         </div>
         <div>
           <p className="font-semibold text-lg mb-1">Wind</p>
-          <p className="text-lg">{wind.speed} km/h</p>
-        </div>
-        <div>
-          <p className="font-semibold text-lg mb-1">Pressure</p>
-          <p className="text-lg">{main.pressure} hPa</p>
+          <p className="text-lg">{windSpeed} km/h</p>
         </div>
       </div>
     </div>
