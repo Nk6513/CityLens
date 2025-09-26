@@ -1,7 +1,8 @@
 import React from "react";
 
-const AlertsPanel = ({ weatherData }) => {
+const AlertsPanel = ({ weatherData, showAlert}) => {
   if (!weatherData) return null;
+  if(!showAlert) return null;
 
   const currentWeather = weatherData;
   const { temp_min, temp_max, humidity } = currentWeather?.main || {};
@@ -71,18 +72,15 @@ const AlertsPanel = ({ weatherData }) => {
   // --------------------------------------------------
   // Render
   // --------------------------------------------------
-  return (
-    <div className="max-w-3xl mx-auto bg-gradient-to-r from-blue-400 via-blue-200 to-blue-50 shadow-lg rounded-xl p-6 m-4 overflow-hidden">
+  return  (
+    <div id="alert-container" className="max-w-3xl mx-auto bg-gradient-to-r from-blue-400 via-blue-200 to-blue-50 shadow-lg rounded-xl p-6 m-4 overflow-hidden">
       <h2 className="text-xl font-bold mb-4 text-center text-blue-600">
         Weather Alerts
       </h2>
 
       <ul className="flex flex-wrap sm:flex-nowrap space-x-0 sm:space-x-4 justify-center">
         {alerts.map((alert, idx) => (
-          <li
-            key={idx}
-            className={`${colorMap[alert.type]} p-3 rounded-md flex justify-center items-center w-full sm:w-auto mb-2 sm:mb-0`}
-          >
+          <li key={idx} className={`${colorMap[alert.type]} p-3 rounded-md flex justify-center items-center w-full sm:w-auto mb-2 sm:mb-0`}         >
             {alert.message}
           </li>
         ))}

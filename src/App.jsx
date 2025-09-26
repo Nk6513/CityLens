@@ -2,7 +2,7 @@
 // | -------- Weather App -------- |
 //================================================================
 
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 import "./index.css";
 
 // ---------------------------------------------------------------
@@ -22,9 +22,10 @@ export default function App() {
   // ----------------------------------------------------------------
   // State Management
   // ----------------------------------------------------------------
-  const [inputSearch, setInputSearch] = useState(""); // User input
-  const [weatherData, setWeatherData] = useState(null); // Fetched weather data
+  const [inputSearch, setInputSearch] = useState(""); 
+  const [weatherData, setWeatherData] = useState(null); 
   const [error, setError] = useState("");
+  const [showAlert, setShowAlert] = useState(true);
 
   // ----------------------------------------------------------------
   // Event Handlers
@@ -38,6 +39,7 @@ export default function App() {
   // Handles the search action
   const handleSearch = async () => {
     if (!inputSearch) return;
+    setShowAlert(true); // whenever user changes the city show the alert again!
 try {
     const data = await fetchWeather(inputSearch);
     if (data) {
@@ -62,7 +64,6 @@ try {
   const fetchWeather = async (city) => {
     const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error("City not found");
@@ -75,6 +76,19 @@ try {
     }
   };
 
+
+  // ----------------------------------------------------------------
+  // Timeout set for AlertsPanel
+  // ----------------------------------------------------------------
+
+  useEffect(() => {
+    const setAlert = setTimeout(() => {
+      if(!showAlert) return;
+      setShowAlert(false);
+    }, 3000); 
+    return () => clearTimeout(setAlert);
+  }, [showAlert])
+
   // ----------------------------------------------------------------
   // Render App
   // ----------------------------------------------------------------
@@ -83,13 +97,8 @@ return (
     <Navbar />
     <div className="flex-1 bg-gradient-to-br from-blue-400 via-blue-300 to-blue-100">
       <main className="container mx-auto px-4 py-6 space-y-6">
-        <SearchBar
-          onChange={handleChange}
-          value={inputSearch}
-          onSearch={handleSearch}
-        />
-        {weatherData && !error && <AlertsPanel weatherData={weatherData} />}
-
+        <SearchBar onChange={handleChange} value={inputSearch} onSearch={handleSearch} />
+        {weatherData && !error &&  <AlertsPanel weatherData={weatherData} showAlert={showAlert} />}
         <div className="flex justify-center">
           <WeatherCard weatherData={weatherData} error={error} />
         </div>
@@ -98,5 +107,4 @@ return (
     <Footer />
   </div>
 );
-
 };
