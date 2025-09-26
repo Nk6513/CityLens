@@ -3,12 +3,10 @@ import React from "react";
 const AlertsPanel = ({ weatherData }) => {
   if (!weatherData) return null;
 
-  const isForecastApi = Array.isArray(weatherData.list);
-  const firstItem = isForecastApi ? weatherData.list[0] : weatherData;
-
-  const { temp_min, temp_max, humidity } = firstItem?.main || {};
-  const windSpeed = firstItem?.wind?.speed;
-  const description = firstItem?.weather?.[0]?.description?.toLowerCase();
+  const currentWeather = weatherData;
+  const { temp_min, temp_max, humidity } = currentWeather?.main || {};
+  const windSpeed = currentWeather?.wind?.speed;
+  const description = currentWeather?.weather?.[0]?.description?.toLowerCase();
 
   // --------------------------------------------------
   // Generate alerts based on conditions

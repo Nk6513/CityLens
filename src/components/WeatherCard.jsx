@@ -1,6 +1,6 @@
 const WeatherCard = ({ weatherData, error }) => {
   // --------------------------------------------------
-  // Handle error and empty states
+  // Handle error when no city is found
   // --------------------------------------------------
   if (error) {
     return (
@@ -15,26 +15,20 @@ const WeatherCard = ({ weatherData, error }) => {
   // --------------------------------------------------
   // Detect API type (forecast or current)
   // --------------------------------------------------
-  const isForecast = Array.isArray(weatherData.list);
-  const city = isForecast ? weatherData.city : weatherData;
+  const currentWeather = weatherData;
 
   // --------------------------------------------------
   // Extract values safely
   // --------------------------------------------------
-  const cityName = city?.name;
-  const country = city?.country || city?.sys?.country;
-  const lat = city?.coord?.lat;
-  const lon = city?.coord?.lon;
-
-  const firstItem = isForecast ? weatherData.list?.[0] : weatherData;
-
-  const date = isForecast
-    ? firstItem?.dt_txt && new Date(firstItem.dt_txt.replace(" ", "T"))
-    : firstItem?.dt && new Date(firstItem.dt * 1000);
-
-  const { temp, temp_min, temp_max, humidity } = firstItem?.main || {};
-  const windSpeed = firstItem?.wind?.speed;
-  const weather = firstItem?.weather?.[0];
+  const { temp, temp_min, temp_max, humidity } = currentWeather?.main || {};
+  const cityName = currentWeather?.name;
+  const country = currentWeather?.country || currentWeather?.sys?.country;
+  const lat = currentWeather?.coord?.lat;
+  const lon = currentWeather?.coord?.lon;
+  const rawdate = currentWeather?.coord?.dt || currentWeather.dt;
+  const date = new Date(rawdate * 1000);
+  const windSpeed = currentWeather?.wind?.speed;
+  const weather = currentWeather?.weather?.[0];
   const icon = weather?.icon;
 
   // --------------------------------------------------
