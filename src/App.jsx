@@ -16,6 +16,7 @@ import AlertsPanel from "./components/AlertsPanel";
 import Footer from "./components/Footer";
 import Map from "./components/map";
 import About from "./components/About";
+import MainLayout from "./components/MainLayout";
 
 // ---------------------------------------------------------------
 // App Component
@@ -93,37 +94,46 @@ try {
   // ----------------------------------------------------------------
 return (
   <Routes>
-    {/* Home Page */}
-    <Route
-      path="/"
-      element={
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <div className="flex-1 bg-gradient-to-br from-blue-400 via-blue-300 to-blue-100">
-            <main className="container mx-auto px-4 py-6 space-y-6">
-              <SearchBar
-                onChange={handleChange}
-                value={inputSearch}
-                onSearch={handleSearch}
-              />
-              {weatherData && !error && (
-                <AlertsPanel weatherData={weatherData} showAlert={showAlert} />
-              )}
-              <div className="flex justify-center">
-                <WeatherCard weatherData={weatherData} error={error} />
-              </div>
-            </main>
-          </div>
-          <Footer />
+  {/* Home Page */}
+  <Route
+    path="/"
+    element={
+      <MainLayout>
+        <SearchBar
+          onChange={handleChange}
+          value={inputSearch}
+          onSearch={handleSearch}
+        />
+        {weatherData && !error && (
+          <AlertsPanel weatherData={weatherData} showAlert={showAlert} />
+        )}
+        <div className="flex justify-center">
+          <WeatherCard weatherData={weatherData} error={error} />
         </div>
-      }
-    />
+      </MainLayout>
+    }
+  />
 
-    {/* Map Page */}
-    <Route path="/map" element={<Map />} />
-    {/* About Page */}
-    <Route path="/about" element={<About />} />
-  </Routes>
+  {/* Map Page */}
+  <Route
+    path="/map"
+    element={
+      <MainLayout>
+        <Map />
+      </MainLayout>
+    }
+  />
+
+  {/* About Page */}
+  <Route
+    path="/about"
+    element={
+      <MainLayout>
+        <About />
+      </MainLayout>
+    }
+  />
+</Routes>
 );
 
 };
