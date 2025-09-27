@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const WeatherCard = ({ weatherData, error }) => {
   // --------------------------------------------------
   // Handle error when no city is found
@@ -35,7 +37,7 @@ const WeatherCard = ({ weatherData, error }) => {
   // Render
   // --------------------------------------------------
   return (
-    <div className="max-w-4xl w-full bg-gradient-to-r from-blue-300 via-blue-50 to-white shadow-2xl rounded-2xl p-10 m-6 text-center transition-transform transform hover:scale-105">
+    <div className="max-w-4xl w-full bg-gradient-to-r from-blue-400 via-blue-90 to-white shadow-2xl rounded-2xl p-10 m-6 text-center transition-transform transform hover:scale-105">
       <h2 className="text-4xl font-extrabold mb-2 text-blue-900">
         {cityName}, {country}
       </h2>
@@ -58,19 +60,19 @@ const WeatherCard = ({ weatherData, error }) => {
         </div>
       )}
 
-      {lat && lon && (
+       {lat && lon && (
         <p className="text-sm text-blue-600 text-center mb-6">
           📍{" "}
-          <a
-            href={`https://www.google.com/maps?q=${lat},${lon}`}
+          <Link
+            to={`https://www.google.com/maps?q=${lat},${lon}`}
             target="_blank"
             rel="noopener noreferrer"
             className="underline hover:text-blue-800"
           >
             Lat: {lat}, Lon: {lon}
-          </a>
+          </Link>
         </p>
-      )}
+      )} 
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-gray-700 mt-6">
         <div>

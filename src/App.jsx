@@ -4,6 +4,7 @@
 
 import React, {  useEffect, useState } from "react";
 import "./index.css";
+import { Route, Routes } from "react-router-dom";
 
 // ---------------------------------------------------------------
 // Import Components
@@ -13,6 +14,8 @@ import SearchBar from "./components/SearchBar";
 import WeatherCard from "./components/WeatherCard";
 import AlertsPanel from "./components/AlertsPanel";
 import Footer from "./components/Footer";
+import Map from "./components/map";
+import About from "./components/About";
 
 // ---------------------------------------------------------------
 // App Component
@@ -54,8 +57,7 @@ try {
     // capture the original error message
     setError(error.message || "Something went wrong.");
     console.error("Weather API error:", error);
-  }
-    
+  } 
   };
 
   // ----------------------------------------------------------------
@@ -67,8 +69,7 @@ try {
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error("City not found");
-      const data = await response.json();
-      console.log(data);  
+      const data = await response.json(); 
       return data;
     } catch (error) {
       console.log(error);
@@ -76,11 +77,9 @@ try {
     }
   };
 
-
   // ----------------------------------------------------------------
   // Timeout set for AlertsPanel
   // ----------------------------------------------------------------
-
   useEffect(() => {
     const setAlert = setTimeout(() => {
       if(!showAlert) return;
@@ -93,18 +92,38 @@ try {
   // Render App
   // ----------------------------------------------------------------
 return (
-  <div className="flex flex-col min-h-screen">
-    <Navbar />
-    <div className="flex-1 bg-gradient-to-br from-blue-400 via-blue-300 to-blue-100">
-      <main className="container mx-auto px-4 py-6 space-y-6">
-        <SearchBar onChange={handleChange} value={inputSearch} onSearch={handleSearch} />
-        {weatherData && !error &&  <AlertsPanel weatherData={weatherData} showAlert={showAlert} />}
-        <div className="flex justify-center">
-          <WeatherCard weatherData={weatherData} error={error} />
+  <Routes>
+    {/* Home Page */}
+    <Route
+      path="/"
+      element={
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <div className="flex-1 bg-gradient-to-br from-blue-400 via-blue-300 to-blue-100">
+            <main className="container mx-auto px-4 py-6 space-y-6">
+              <SearchBar
+                onChange={handleChange}
+                value={inputSearch}
+                onSearch={handleSearch}
+              />
+              {weatherData && !error && (
+                <AlertsPanel weatherData={weatherData} showAlert={showAlert} />
+              )}
+              <div className="flex justify-center">
+                <WeatherCard weatherData={weatherData} error={error} />
+              </div>
+            </main>
+          </div>
+          <Footer />
         </div>
-      </main>
-    </div>
-    <Footer />
-  </div>
+      }
+    />
+
+    {/* Map Page */}
+    <Route path="/map" element={<Map />} />
+    {/* About Page */}
+    <Route path="/about" element={<About />} />
+  </Routes>
 );
+
 };
