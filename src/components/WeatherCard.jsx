@@ -50,6 +50,10 @@ const WeatherCard = ({ weatherData, error }) => {
         {weather?.description} • {temp}°C
       </p>
 
+      <p className="text-xl text-gray-700 mb-6">
+        lat:  {lat}, lon: {lon}
+      </p>
+
       {icon && (
         <div className="flex justify-center items-center mb-6">
           <img
@@ -63,13 +67,8 @@ const WeatherCard = ({ weatherData, error }) => {
        {lat && lon && (
         <p className="text-sm text-blue-600 text-center mb-6">
           📍{" "}
-          <Link
-            to={`https://www.google.com/maps?q=${lat},${lon}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:text-blue-800"
-          >
-            Lat: {lat}, Lon: {lon}
+          <Link to={`/map/${lat}/${lon}`}>
+           <button className="map-btn">View on Map</button>
           </Link>
         </p>
       )} 
