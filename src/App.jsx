@@ -90,8 +90,6 @@ export default function App() {
   // ----------------------------------------------------------------
   return (
     <>
-     
-
       <Routes>
         {/* Home Page */}
         <Route
@@ -116,14 +114,7 @@ export default function App() {
         />
 
         {/* Map Page */}
-        <Route
-          path="/map/:lat/:lon"
-          element={
-            <MainLayout>
-              <Map />
-            </MainLayout>
-          }
-        />
+    <Route path="/map/:lat?/:lon?" element={<MainLayout><Map /></MainLayout>} />
 
         {/* About Page */}
         <Route
@@ -135,8 +126,6 @@ export default function App() {
           }
         />
       </Routes>
-
-   
     </>
   );
 }
