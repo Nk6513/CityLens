@@ -1,50 +1,32 @@
+import { useCoordinates } from "../coordContext";
 
+const About = ({ cityInfo }) => {
+  const { coordinates } = useCoordinates(); // ✅ access global coordinates if needed
 
+  console.log("Global coordinates from context:", coordinates);
 
-
-const About = () => {
-
-  
-  
-
-
-
-
-
-  return (
-    <div className="max-w-md w-full mx-auto bg-white bg-opacity-20 backdrop-blur-md rounded-2xl p-6 mt-10">
-      {/* City Image / Thumbnail */}
-      <div className="h-48 w-full mb-4">
-        <img
-          src="https://via.placeholder.com/400x200"
-          alt="City"
-          className="w-full h-full object-cover rounded-xl"
-        />
-      </div>
-
-      {/* City Info */}
-      <div className="mb-4 text-white">
-        <h2 className="text-2xl font-bold mb-2">City Name</h2>
-        <p className="mb-2">
-          Country: <span className="font-medium">Country Name</span>
-        </p>
-        <p className="mb-2">
-          Population: <span className="font-medium">Population Info</span>
-        </p>
-        <p className="mb-2">
-          Coordinates: <span className="font-medium">Lat, Lon</span>
-        </p>
-        <p>
-          Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  if (!cityInfo) {
+    return (
+      <div className="flex justify-center items-center mt-10">
+        <p className="text-gray-600 text-lg">
+          No city selected yet. Search a city on the homepage to see details.
         </p>
       </div>
+    );
+  }
 
-      {/* Optional footer / button */}
-      <div className="flex justify-end">
-        <button className="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-opacity-80 transition">
-          More Info
-        </button>
-      </div>
+ return (
+    <div className="mt-10 mx-4 md:mx-auto max-w-4xl p-8 rounded-2xl bg-white/70 backdrop-blur-md shadow-xl">
+      {/* City Name */}
+      <h2 className="text-4xl font-bold text-blue-800 mb-4 border-b-2 border-blue-300 inline-block pb-2">
+        {cityInfo.title}
+      </h2>
+
+      {/* Wikipedia Text */}
+      <div
+        className="text-gray-800 text-lg leading-relaxed space-y-4 prose prose-blue"
+        dangerouslySetInnerHTML={{ __html: cityInfo.extract }}
+      />
     </div>
   );
 };

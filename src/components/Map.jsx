@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { useCoordinates } from "../coordContext"; // import global context
 
-// Helper to re-center map
+// Helper to re-center map when coordinates change
 const MapUpdater = ({ position }) => {
   const map = useMap();
   useEffect(() => {
@@ -13,51 +13,22 @@ const MapUpdater = ({ position }) => {
 };
 
 const Map = () => {
-  const { lat, lon } = useParams();
+  const { coordinates, setCoordinates } = useCoordinates(); // get global lat/lon
+  const defaultPosition = [40.7128, -74.006]; // NYC fallback
+  const position = coordinates ? [coordinates.lat, coordinates.lon] : defaultPosition;
 
-  const defaultPosition = [40.7128, -74.006]; // NYC default
-  const latitude = lat ? parseFloat(lat) : null;
-  const longitude = lon ? parseFloat(lon) : null;
-  const hasValidCoords =
-    typeof latitude === "number" &&
-    typeof longitude === "number" &&
-    !isNaN(latitude) &&
-    !isNaN(longitude) &&
-    Math.abs(latitude) <= 90 &&
-    Math.abs(longitude) <= 180;
-
-  const initialPosition = hasValidCoords ? [latitude, longitude] : defaultPosition;
-
-  const [position, setPosition] = useState(initialPosition);
+  const [mapPosition, setMapPosition] = useState(position);
   const [searchValue, setSearchValue] = useState("");
-  const [cityInfo, setCityInfo] = useState(null);
 
-  // Fetch city info by name (Wikipedia)
-  const fetchCityInfo = async (cityName) => {
-    try {
-      const wikiRes = await fetch(
-        `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageprops&exintro&titles=${encodeURIComponent(
-          cityName
-        )}`
-      );
-      const wikiData = await wikiRes.json();
-      const pages = wikiData.query.pages;
-      const pageId = Object.keys(pages)[0];
-      if (pageId && pages[pageId]) {
-        setCityInfo({
-          title: pages[pageId].title,
-          extract: pages[pageId].extract,
-        });
-      } else {
-        setCityInfo(null);
-      }
-    } catch (err) {
-      console.error(err);
-      setCityInfo(null);
+  // If global coordinates change, recenter map
+  useEffect(() => {
+    if (coordinates) {
+      setMapPosition([coordinates.lat, coordinates.lon]);
+      fetchCityByCoords(coordinates.lat, coordinates.lon);
     }
-  };
+  }, [coordinates]);
 
-  // Reverse geocode lat/lon to city name using Nominatim
+  // Reverse geocode lat/lon → city name
   const fetchCityByCoords = async (lat, lon) => {
     try {
       const res = await fetch(
@@ -73,7 +44,6 @@ const Map = () => {
           data.address.state;
         if (cityName) {
           setSearchValue(cityName);
-          fetchCityInfo(cityName);
         }
       }
     } catch (err) {
@@ -81,17 +51,9 @@ const Map = () => {
     }
   };
 
-  // On initial load, if lat/lon in URL, fetch city info
-  useEffect(() => {
-    if (hasValidCoords) {
-      fetchCityByCoords(latitude, longitude);
-    }
-  }, [latitude, longitude]);
-
-  // Search city by name
+  // Search by city name
   const handleSearch = async () => {
     if (!searchValue) return;
-
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
@@ -99,15 +61,12 @@ const Map = () => {
         )}`
       );
       const data = await response.json();
-
       if (!data.length) return alert("Location not found");
 
       const lat = parseFloat(data[0].lat);
       const lon = parseFloat(data[0].lon);
-      setPosition([lat, lon]);
-
-      // Fetch Wikipedia info for searched city
-      fetchCityInfo(searchValue);
+      setMapPosition([lat, lon]);
+      setCoordinates({ lat, lon }); // update global context too
     } catch (err) {
       console.error(err);
       alert("Error searching location");
@@ -133,34 +92,25 @@ const Map = () => {
         >
           Search
         </button>
-
-        {/* Display city info */}
-        {cityInfo && (
-          <div className="bg-white text-black p-3 rounded shadow overflow-auto">
-            <h3 className="font-bold mb-2">{cityInfo.title}</h3>
-            <div
-              className="text-sm"
-              dangerouslySetInnerHTML={{ __html: cityInfo.extract }}
-            />
-          </div>
-        )}
       </div>
 
       {/* Map */}
       <div className="w-2/3 h-full rounded-2xl overflow-hidden">
-        <MapContainer center={position} zoom={13} scrollWheelZoom={false} className="w-full h-full">
-          <MapUpdater position={position} />
-
+        <MapContainer
+          center={mapPosition}
+          zoom={13}
+          scrollWheelZoom={true}
+          className="w-full h-full"
+        >
+          <MapUpdater position={mapPosition} />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
 
-          <Marker position={position}>
+          <Marker position={mapPosition}>
             <Popup>
-              {hasValidCoords
-                ? `${latitude?.toFixed(4)}, ${longitude?.toFixed(4)}`
-                : `${position[0].toFixed(4)}, ${position[1].toFixed(4)} (Default location)`}
+              {mapPosition[0].toFixed(4)}, {mapPosition[1].toFixed(4)}
             </Popup>
           </Marker>
         </MapContainer>

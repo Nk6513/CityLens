@@ -12,7 +12,15 @@ const WeatherCard = ({ weatherData, error }) => {
     );
   }
 
-  if (!weatherData) return null;
+  if (!weatherData) {
+  return (
+     <div className="flex justify-center items-center mt-10">
+        <p className="text-gray-600 text-lg">
+          No city selected yet. Search a city on the homepage to see details.
+        </p>
+      </div>
+  );
+}
 
   // --------------------------------------------------
   // Detect API type (forecast or current)
