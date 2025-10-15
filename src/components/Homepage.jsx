@@ -1,10 +1,15 @@
 import React from "react";
-
+import { useEffect } from "react";
 const Homepage = ({ value, onChange, onSearch }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch();
   };
+
+  // Remove focus when page loads
+  useEffect(()=> {
+    document.activeElement.blur();
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center from-blue-100">
