@@ -58,9 +58,9 @@ const WeatherCard = ({ weatherData, error }) => {
         {weather?.description} • {temp}°C
       </p>
 
-      <p className="text-xl text-gray-700 mb-6">
+      {/* <p className="text-xl text-gray-700 mb-6">
         lat:  {lat}, lon: {lon}
-      </p>
+      </p> */}
 
       {icon && (
         <div className="flex justify-center items-center mb-6">
