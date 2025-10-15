@@ -76,7 +76,7 @@ const Map = () => {
   return (
     <div className="w-full max-w-full h-[500px] rounded-2xl shadow-lg flex overflow-hidden">
       {/* Sidebar */}
-      <div className="w-1/3 p-4 flex flex-col bg-gradient-to-b from-blue-400 to-blue-700 text-white shadow-lg overflow-auto">
+      <div className="w-1/3 p-4 flex flex-col bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-lg overflow-auto">
         <h2 className="text-lg font-bold mb-4">Search Location</h2>
         <input
           type="text"

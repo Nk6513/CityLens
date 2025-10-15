@@ -16,7 +16,7 @@ const About = ({ cityInfo }) => {
   }
 
  return (
-    <div className="mt-10 mx-4 md:mx-auto max-w-4xl p-8 rounded-2xl bg-white/70 backdrop-blur-md shadow-xl">
+    <div className="mt-10 mx-4 md:mx-auto max-w-4xl p-8 rounded-2xl bg-blue-300/30 backdrop-blur-lg shadow-xl">
       {/* City Name */}
       <h2 className="text-4xl font-bold text-blue-800 mb-4 border-b-2 border-blue-300 inline-block pb-2">
         {cityInfo.title}

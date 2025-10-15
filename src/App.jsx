@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 // ---------------------------------------------------------------
 import WeatherCard from "./components/WeatherCard";
 import AlertsPanel from "./components/AlertsPanel";
-import Map from "./components/map";
+import Map from "./components/Map";
 import About from "./components/About";
 import MainLayout from "./components/MainLayout";
 import Homepage from "./components/Homepage";
