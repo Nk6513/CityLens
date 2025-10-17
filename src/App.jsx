@@ -23,6 +23,7 @@ import Homepage from "./components/Homepage";
 // App Component
 // ---------------------------------------------------------------
 export default function App() {
+
   // ----------------------------------------------------------------
   // State Management
   // ----------------------------------------------------------------
@@ -38,13 +39,21 @@ export default function App() {
   // ----------------------------------------------------------------
   // Event Handlers
   // ----------------------------------------------------------------
+
+  // Handling input from the search box
   const handleChange = (e) => {
     setInputSearch(e.target.value);
   };
+  
+  // Clearing input value
+  const handleClear = () => {
+    setInputSearch("");
+  }
 
+  // Passing input value to weather api and wikipedia 
   const handleSearch = async () => {
     if (!inputSearch) return;
-    setShowAlert(true);
+    setShowAlert(true); // Show weather alert panel
 
     try {
       const [data, wikiResult] = await Promise.all([
@@ -52,19 +61,18 @@ export default function App() {
         fetchCityInfo(inputSearch),
       ]);
 
-      // Weather API
+      // Weather API response data
       if (data) {
         setWeatherData(data);
         setCoordinates({ lat: data.coord?.lat, lon: data.coord?.lon });
         setError("");
-      // Navigate to Weather page
-        navigate("/weather");
+        navigate("/weather"); // Navigate to Weather page
       } else {
         setWeatherData(null);
         setError("City not found");
       }
 
-      // Wikipedia API
+      // Wikipedia API response data
       if (wikiResult) setCityInfo(wikiResult);
     } catch (error) {
       setWeatherData(null);
@@ -120,11 +128,10 @@ export default function App() {
   };
 
   // ----------------------------------------------------------------
-  // Timeout set for AlertsPanel
+  // Hide Alert Panel
   // ----------------------------------------------------------------
    useEffect(() => {
       const setAlert = setTimeout(() => {
-      if (!showAlert) return;
         setShowAlert(false);
       }, 3000);
 
@@ -156,6 +163,7 @@ export default function App() {
                 value={inputSearch}
                 onSearch={handleSearch}
                 error={error}
+                clearInput={handleClear}
               />
             </MainLayout>
           }

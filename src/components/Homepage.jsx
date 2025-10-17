@@ -1,16 +1,6 @@
-import React from "react";
-const Homepage = ({ value, onChange, onSearch, error }) => {
-  // --------------------------------------------------
-  // Handle error when no city is found
-  // --------------------------------------------------
-  // if (error) {
-  //   return (
-  //     <div className="max-w-4xl w-full bg-red-100 text-red-800 shadow-lg rounded-2xl p-6 m-6 text-center">
-
-  //     </div>
-  //   );
-  // }
-
+import React, { useState } from "react";
+const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
+  const [isFocused, setIsFocused] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch();
@@ -53,9 +43,22 @@ const Homepage = ({ value, onChange, onSearch, error }) => {
           type="text"
           value={value}
           onChange={onChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder="Enter city..."
           className="flex-grow px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+
+        {isFocused && value && (
+          <button
+            type="button"
+            onMouseDown={(e) => e.preventDefault()} // prevent input blur
+            onClick={clearInput}
+            className="px-3 text-gray-400 hover:text-gray-600"
+          >
+            ✕
+          </button>
+        )}
 
         <button
           type="submit"
@@ -64,7 +67,7 @@ const Homepage = ({ value, onChange, onSearch, error }) => {
           Search
         </button>
       </form>
-      {/* <p className="text-xl font-semibold">⚠️ {error}</p> */}
+    
       {error && value && (
         <p className="mt-2 text-sm sm:text-base font-medium text-red-700 bg-red-100 border border-red-300 rounded-md px-3 py-2 flex items-center gap-2">
           <span className="text-lg">⚠️</span> {error}
