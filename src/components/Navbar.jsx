@@ -20,10 +20,9 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Desktop Links */}
+          {/*---------- Desktop Links ----------*/}
           <div className="hidden md:flex space-x-6">
             <NavLink
-              onClick={() => (window.location.href = "/")}
               to="/"
               className={({ isActive }) =>
                 isActive
@@ -68,7 +67,7 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/*---------- Mobile Menu Button ----------*/}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -97,7 +96,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Links */}
+      {/*---------- Mobile links ----------*/}
       {isOpen && (
         <div className="md:hidden px-2 pt-2 pb-3 space-y-1 bg-indigo-700">
           <NavLink
