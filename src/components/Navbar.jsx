@@ -1,14 +1,14 @@
-import { Link } from "react-router-dom";
-
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
-  
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md">
-      {/* Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo / App Name */}
+          {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <img
               onClick={() => (window.location.href = "/")}
@@ -18,41 +18,60 @@ const Navbar = () => {
               height={100}
               className="cursor-pointer"
             />
-
-            {/* <span  className="text-xl font-bold text-white">CityLens</span> */}
           </Link>
 
           {/* Desktop Links */}
           <div className="hidden md:flex space-x-6">
-            <Link
+            <NavLink
+              onClick={() => (window.location.href = "/")}
               to="/"
-              className="text-white hover:text-yellow-300 transition-colors"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-yellow-300 font-semibold"
+                  : "text-white hover:text-yellow-200 transition-colors"
+              }
             >
               Home
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/weather"
-              className="text-white hover:text-yellow-300 transition-colors"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-yellow-300 font-semibold"
+                  : "text-white hover:text-yellow-200 transition-colors"
+              }
             >
               Weather
-            </Link>
-            <Link
-              to={"/map"}
-              className="text-white hover:text-yellow-300 transition-colors"
+            </NavLink>
+
+            <NavLink
+              to="/map"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-yellow-300 font-semibold"
+                  : "text-white hover:text-yellow-200 transition-colors"
+              }
             >
               Maps
-            </Link>
-            <Link
+            </NavLink>
+
+            <NavLink
               to="/about"
-              className="text-white hover:text-yellow-300 transition-colors"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-yellow-300 font-semibold"
+                  : "text-white hover:text-yellow-200 transition-colors"
+              }
             >
               About
-            </Link>
+            </NavLink>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button
+              onClick={() => setIsOpen(!isOpen)}
               type="button"
               className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-500 focus:ring-white"
             >
@@ -63,11 +82,14 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
               >
                 <path
-                  className="inline-flex"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
+                  d={
+                    isOpen
+                      ? "M6 18L18 6M6 6l12 12" // X icon
+                      : "M4 6h16M4 12h16M4 18h16" // Hamburger
+                  }
                 />
               </svg>
             </button>
@@ -75,27 +97,41 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Links (hidden by default) */}
-      <div className="md:hidden hidden px-2 pt-2 pb-3 space-y-1">
-        <Link
-          to="/"
-          className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
-        >
-          Home
-        </Link>
-        <Link
-          to="/map"
-          className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
-        >
-          Map
-        </Link>
-        <Link
-          to="/about"
-          className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
-        >
-          About
-        </Link>
-      </div>
+      {/* Mobile Links */}
+      {isOpen && (
+        <div className="md:hidden px-2 pt-2 pb-3 space-y-1 bg-indigo-700">
+          <NavLink
+            to="/"
+            onClick={() => setIsOpen(false)}
+            className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
+          >
+            Home
+          </NavLink>
+
+           <NavLink
+            to="/weather"
+            onClick={() => setIsOpen(false)}
+            className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
+          >
+            Weather
+          </NavLink>
+
+          <NavLink
+            to="/map"
+            onClick={() => setIsOpen(false)}
+            className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
+          >
+            Map
+          </NavLink>
+          <NavLink
+            to="/about"
+            onClick={() => setIsOpen(false)}
+            className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"
+          >
+            About
+          </NavLink>
+        </div>
+      )}
     </nav>
   );
 };

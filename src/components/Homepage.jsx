@@ -1,15 +1,20 @@
 import React from "react";
-import { useEffect } from "react";
-const Homepage = ({ value, onChange, onSearch }) => {
+const Homepage = ({ value, onChange, onSearch, error }) => {
+  // --------------------------------------------------
+  // Handle error when no city is found
+  // --------------------------------------------------
+  // if (error) {
+  //   return (
+  //     <div className="max-w-4xl w-full bg-red-100 text-red-800 shadow-lg rounded-2xl p-6 m-6 text-center">
+
+  //     </div>
+  //   );
+  // }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch();
   };
-
-  // Remove focus when page loads
-  useEffect(()=> {
-    document.activeElement.blur();
-  }, [])
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center from-blue-100">
@@ -59,6 +64,12 @@ const Homepage = ({ value, onChange, onSearch }) => {
           Search
         </button>
       </form>
+      {/* <p className="text-xl font-semibold">⚠️ {error}</p> */}
+      {error && value && (
+        <p className="mt-2 text-sm sm:text-base font-medium text-red-700 bg-red-100 border border-red-300 rounded-md px-3 py-2 flex items-center gap-2">
+          <span className="text-lg">⚠️</span> {error}
+        </p>
+      )}
 
       {/* Hero Image */}
       <div className="mt-12 w-full max-w-lg">

@@ -133,6 +133,14 @@ export default function App() {
 
 
   // ----------------------------------------------------------------
+  // Remove focus when app loads
+  // ----------------------------------------------------------------
+  useEffect(()=> {
+    document.activeElement.blur();
+  }, [])
+
+
+  // ----------------------------------------------------------------
   // Render App
   // ----------------------------------------------------------------
   return (
@@ -147,6 +155,7 @@ export default function App() {
                 onChange={handleChange}
                 value={inputSearch}
                 onSearch={handleSearch}
+                error={error}
               />
             </MainLayout>
           }
