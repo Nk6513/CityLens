@@ -15,7 +15,9 @@ const MapUpdater = ({ position }) => {
 const Map = () => {
   const { coordinates, setCoordinates } = useCoordinates(); // get global lat/lon
   const defaultPosition = [40.7128, -74.006]; // NYC fallback
-  const position = coordinates ? [coordinates.lat, coordinates.lon] : defaultPosition;
+  const position = coordinates
+    ? [coordinates.lat, coordinates.lon]
+    : defaultPosition;
 
   const [mapPosition, setMapPosition] = useState(position);
   const [searchValue, setSearchValue] = useState("");
@@ -74,10 +76,10 @@ const Map = () => {
   };
 
   return (
-    <div className="w-full max-w-full h-[500px] rounded-2xl shadow-lg flex overflow-hidden">
+    <div className="w-full max-w-full h-auto md:h-[500px] rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden">
       {/* Sidebar */}
-      <div className="w-1/3 p-4 flex flex-col bg-gradient-to-b from-blue-500 to-blue-700 text-white shadow-lg overflow-auto">
-        <h2 className="text-lg font-bold mb-4">Search Location</h2>
+      <div className="w-full md:w-1/3 p-4 flex flex-col bg-gradient-to-b from-blue-300 to-blue-500 text-white shadow-lg overflow-auto">
+        <h2 className="text-lg font-bold text-blue-800 mb-4">Search Location</h2>
         <input
           type="text"
           value={searchValue}
@@ -88,14 +90,14 @@ const Map = () => {
         />
         <button
           onClick={handleSearch}
-          className="w-full p-2 bg-blue-900 rounded text-white font-semibold hover:bg-blue-800 transition-colors mb-4"
+          className="w-full p-2 bg-blue-200 text-blue-900 font-semibold rounded hover:bg-blue-600 hover:text-white transition-colors"
         >
           Search
         </button>
       </div>
 
       {/* Map */}
-      <div className="w-2/3 h-full rounded-2xl overflow-hidden">
+      <div className="w-full md:w-2/3 h-[400px] md:h-full rounded-2xl overflow-hidden">
         <MapContainer
           center={mapPosition}
           zoom={13}
@@ -107,7 +109,6 @@ const Map = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-
           <Marker position={mapPosition}>
             <Popup>
               {mapPosition[0].toFixed(4)}, {mapPosition[1].toFixed(4)}
