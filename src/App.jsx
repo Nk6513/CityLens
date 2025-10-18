@@ -2,12 +2,10 @@
 // | -------- Weather App -------- |
 //================================================================
 
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
-import { Route, Routes } from "react-router-dom";
-import { CoordinatesProvider } from "./coordContext";
-import { useNavigate } from "react-router-dom";
-
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { LocationProvider, useLocation } from "./LocationContext";
 
 // ---------------------------------------------------------------
 // Import Components
@@ -22,37 +20,33 @@ import Homepage from "./components/Homepage";
 // App Component
 // ---------------------------------------------------------------
 export default function App() {
+  return (
+    <LocationProvider>
+      <AppContent />
+    </LocationProvider>
+  );
+}
 
-  // ----------------------------------------------------------------
-  // State Management
-  // ----------------------------------------------------------------
+// ---------------------------------------------------------------
+// AppContent (logic moved inside provider)
+// ---------------------------------------------------------------
+function AppContent() {
+  const { setCoordinates, setCityInfo, setWeatherData} = useLocation(); 
   const [inputSearch, setInputSearch] = useState("");
-  const [weatherData, setWeatherData] = useState(null);
-  const [coordinates, setCoordinates] = useState(null);
   const [error, setError] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [cityInfo, setCityInfo] = useState(null);
 
   const navigate = useNavigate();
 
-  // ----------------------------------------------------------------
-  // Event Handlers
-  // ----------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------
+  const handleChange = (e) => setInputSearch(e.target.value);
+  const handleClear = () => setInputSearch("");
 
-  // Handling input from the search box
-  const handleChange = (e) => {
-    setInputSearch(e.target.value);
-  };
-  
-  // Clearing input value
-  const handleClear = () => {
-    setInputSearch("");
-  }
-
-  // Passing input value to weather api and wikipedia 
   const handleSearch = async () => {
     if (!inputSearch) return;
-    setShowAlert(true); // Show weather alert panel
+    setShowAlert(true);
 
     try {
       const [data, wikiResult] = await Promise.all([
@@ -60,18 +54,16 @@ export default function App() {
         fetchCityInfo(inputSearch),
       ]);
 
-      // Weather API response data
       if (data) {
         setWeatherData(data);
         setCoordinates({ lat: data.coord?.lat, lon: data.coord?.lon });
         setError("");
-        navigate("/weather"); // Navigate to Weather page
+        navigate("/weather");
       } else {
         setWeatherData(null);
         setError("City not found");
       }
 
-      // Wikipedia API response data
       if (wikiResult) setCityInfo(wikiResult);
     } catch (error) {
       setWeatherData(null);
@@ -81,9 +73,9 @@ export default function App() {
     }
   };
 
-  // ----------------------------------------------------------------
-  // Weather API Call
-  // ----------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // API Calls
+  // ---------------------------------------------------------------
   const fetchWeather = async (city) => {
     const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
@@ -92,15 +84,13 @@ export default function App() {
       const response = await fetch(url);
       if (!response.ok) throw new Error("City not found");
       return await response.json();
+      
     } catch (error) {
       console.error(error);
       return null;
     }
   };
 
-  // ----------------------------------------------------------------
-  // Wikipedia API Call
-  // ----------------------------------------------------------------
   const fetchCityInfo = async (cityName) => {
     try {
       const wikiRes = await fetch(
@@ -126,81 +116,68 @@ export default function App() {
     }
   };
 
-  // ----------------------------------------------------------------
-  // Hide Alert Panel
-  // ----------------------------------------------------------------
-  //  useEffect(() => {
-  //     const setAlert = setTimeout(() => {
-  //       setShowAlert(false);
-  //     }, 3000);
-
-  //     return () => clearTimeout(setAlert);
-  //     }, [showAlert]);
-
-
-  // ----------------------------------------------------------------
+  // ---------------------------------------------------------------
   // Remove focus when app loads
-  // ----------------------------------------------------------------
-  useEffect(()=> {
+  // ---------------------------------------------------------------
+  useEffect(() => {
     document.activeElement.blur();
-  }, [])
+  }, []);
 
-
-  // ----------------------------------------------------------------
-  // Render App
-  // ----------------------------------------------------------------
+  // ---------------------------------------------------------------
+  // Render Routes
+  // ---------------------------------------------------------------
   return (
-    <CoordinatesProvider coordinates={coordinates} setCoordinates={setCoordinates}>
-      <Routes>
-        {/* ---------------- Home Page ---------------- */}
-        <Route
-          path="/"
-          element={
-            <MainLayout coordinates={coordinates}>
-              <Homepage
-                onChange={handleChange}
-                value={inputSearch}
-                onSearch={handleSearch}
+    <Routes>
+      {/* ---------------- Home Page ---------------- */}
+      <Route
+        path="/"
+        element={
+          <MainLayout>
+            <Homepage
+              onChange={handleChange}
+              value={inputSearch}
+              onSearch={handleSearch}
+              error={error}
+              clearInput={handleClear}
+            />
+          </MainLayout>
+        }
+      />
+
+      {/* ---------------- Weather Page ---------------- */}
+      <Route
+        path="/weather"
+        element={
+          <MainLayout>
+            <div className="flex justify-center">
+              <WeatherCard
+                showAlert={showAlert}
                 error={error}
-                clearInput={handleClear}
               />
-            </MainLayout>
-          }
-        />
+            </div>
+          </MainLayout>
+        }
+      />
 
-        {/* ---------------- Weather Page ---------------- */}
-        <Route
-          path="/weather"
-          element={
-            <MainLayout coordinates={coordinates}>
-                {/* Weather Card */}
-                <div className="flex justify-center">
-                  <WeatherCard weatherData={weatherData} showAlert={showAlert} error={error} />
-                </div>
-            </MainLayout>
-          }
-        />
+      {/* ---------------- Map Page ---------------- */}
+      <Route
+        path="/map/:lat?/:lon?"
+        element={
+          <MainLayout>
+            <Map />
+          </MainLayout>
+        }
+      />
 
-        {/* ---------------- Map Page ---------------- */}
-        <Route
-          path="/map/:lat?/:lon?"
-          element={
-            <MainLayout>
-              <Map />
-            </MainLayout>
-          }
-        />
-
-        {/* ---------------- About Page ---------------- */}
-        <Route
-          path="/about"
-          element={
-            <MainLayout>
-              <About cityInfo={cityInfo} />
-            </MainLayout>
-          }
-        />
-      </Routes>
-    </CoordinatesProvider>
+      {/* ---------------- About Page ---------------- */}
+      <Route
+        path="/about"
+        element={
+          <MainLayout>
+            <About />
+          </MainLayout>
+        }
+      />
+    </Routes>
   );
 }

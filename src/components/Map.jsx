@@ -1,103 +1,185 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  useMap,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useCoordinates } from "../coordContext"; // import global context
+import { useLocation } from "../LocationContext";
+import { useNavigate } from "react-router-dom";
 
-// Helper to re-center map when coordinates change
+// ---------------------------------------------------------------
+// MapUpdater: Recenter map when position changes
+// ---------------------------------------------------------------
 const MapUpdater = ({ position }) => {
   const map = useMap();
+
   useEffect(() => {
     map.setView(position, map.getZoom(), { animate: true });
   }, [position, map]);
+
   return null;
 };
 
+// ---------------------------------------------------------------
+// Map Component
+// ---------------------------------------------------------------
 const Map = () => {
-  const { coordinates, setCoordinates } = useCoordinates(); // get global lat/lon
-  const defaultPosition = [40.7128, -74.006]; // NYC fallback
+  // ---------------------------------------------------------------
+  // Context & Navigation
+  // ---------------------------------------------------------------
+  const { coordinates, cityInfo } = useLocation();
+  const navigate = useNavigate();
+  console.log(cityInfo);
+
+  // ---------------------------------------------------------------
+  // Default and current map position
+  // ---------------------------------------------------------------
+  const defaultPosition = [40.7128, -74.006];
   const position = coordinates
     ? [coordinates.lat, coordinates.lon]
     : defaultPosition;
 
+  // ---------------------------------------------------------------
+  // Local States
+  // ---------------------------------------------------------------
   const [mapPosition, setMapPosition] = useState(position);
   const [searchValue, setSearchValue] = useState("");
+  const [route, setRoute] = useState(null);
+  const [routeInfo, setRouteInfo] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [isRouteLoading, setIsRouteLoading] = useState(false);
 
-  // If global coordinates change, recenter map
+  // ---------------------------------------------------------------
+  // Handlers
+  // ---------------------------------------------------------------
+  const handleNavigate = () => {
+    navigate("/about");
+  };
+
+  // ---------------------------------------------------------------
+  // Get user location
+  // ---------------------------------------------------------------
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => setUserLocation([coords.latitude, coords.longitude]),
+      (err) => console.warn("Geolocation not available", err)
+    );
+  }, []);
+
+  // ---------------------------------------------------------------
+  // Update map when coordinates or cityInfo changes
+  // ---------------------------------------------------------------
   useEffect(() => {
     if (coordinates) {
       setMapPosition([coordinates.lat, coordinates.lon]);
-      fetchCityByCoords(coordinates.lat, coordinates.lon);
-    }
-  }, [coordinates]);
+      fetchCityByCoords(cityInfo);
 
-  // Reverse geocode lat/lon → city name
-  const fetchCityByCoords = async (lat, lon) => {
+      if (userLocation) {
+        fetchRoute(userLocation, [coordinates.lat, coordinates.lon]);
+      }
+    }
+  }, [coordinates, userLocation]);
+
+  // ---------------------------------------------------------------
+  // Set city name from Wikipedia data
+  // ---------------------------------------------------------------
+  const fetchCityByCoords = (cityInfo) => {
+    if (!cityInfo?.title) return;
+    setSearchValue(cityInfo.title);
+  };
+
+  // ---------------------------------------------------------------
+  // Fetch route info between two points
+  // ---------------------------------------------------------------
+  const fetchRoute = async (start, end) => {
     try {
+      setIsRouteLoading(true); // show loading state
+      const [startLat, startLon] = start;
+      const [endLat, endLon] = end;
+
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+        `https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${endLon},${endLat}?overview=full&geometries=geojson`
       );
+
       const data = await res.json();
-      if (data.address) {
-        const cityName =
-          data.address.city ||
-          data.address.town ||
-          data.address.village ||
-          data.address.county ||
-          data.address.state;
-        if (cityName) {
-          setSearchValue(cityName);
-        }
+
+      if (data.routes?.length) {
+        const routeCoords = data.routes[0].geometry.coordinates.map(
+          ([lon, lat]) => [lat, lon]
+        );
+
+        setRoute(routeCoords);
+        setRouteInfo({
+          distance: (data.routes[0].distance / 1000).toFixed(2),
+          duration: (data.routes[0].duration / 60).toFixed(0),
+        });
+        setIsRouteLoading(false);
+      } else {
+        setRoute(null);
+        setRouteInfo(null);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching route", err);
+      setRoute(null);
+      setRouteInfo(null);
     }
   };
 
-  // Search by city name
-  const handleSearch = async () => {
-    if (!searchValue) return;
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          searchValue
-        )}`
-      );
-      const data = await response.json();
-      if (!data.length) return alert("Location not found");
-
-      const lat = parseFloat(data[0].lat);
-      const lon = parseFloat(data[0].lon);
-      setMapPosition([lat, lon]);
-      setCoordinates({ lat, lon }); // update global context too
-    } catch (err) {
-      console.error(err);
-      alert("Error searching location");
-    }
-  };
-
+  // ---------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------
   return (
     <div className="w-full max-w-full h-auto md:h-[500px] rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden">
-      {/* Sidebar */}
+      {/* ---------------- Side Bar on Map ---------------- */}
       <div className="w-full md:w-1/3 p-4 flex flex-col bg-gradient-to-b from-blue-300 to-blue-500 text-white shadow-lg overflow-auto">
-        <h2 className="text-lg font-bold text-blue-800 mb-4">Search Location</h2>
-        <input
-          type="text"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          placeholder="Enter a city or place..."
-          className="w-full p-2 rounded mb-2 text-black"
-        />
-        <button
-          onClick={handleSearch}
-          className="w-full p-2 bg-blue-200 text-blue-900 font-semibold rounded hover:bg-blue-600 hover:text-white transition-colors"
-        >
-          Search
-        </button>
+        <h2 className="text-lg font-bold text-blue-800 mb-4">Location</h2>
+
+        {searchValue ? (
+          <h4 className="inline-block text-2xl font-bold text-left text-gray-900">
+            {searchValue}
+          </h4>
+        ) : (
+          <div className="flex items-center justify-center w-full p-3 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-200 rounded-xl shadow-inner animate-pulse">
+            <span className="text-gray-900 text-base font-medium">
+              No city searched yet
+            </span>
+          </div>
+        )}
+
+        {/* ---------------- Route Info ---------------- */}
+        {isRouteLoading ? (
+          <div className="mt-4 flex items-center justify-center space-x-1">
+            <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+            <span className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+            <span className="w-2 h-2 bg-blue-300 rounded-full animate-bounce"></span>
+          </div>
+        ) : routeInfo ? (
+          <div className="mt-4 p-2 bg-blue-700 rounded shadow-md">
+            <h3 className="font-semibold text-white mb-1">Route Info</h3>
+            <p className="text-blue-100">Distance: {routeInfo.distance} km</p>
+            <p className="text-blue-100">Duration: {routeInfo.duration} min</p>
+          </div>
+        ) : null}
+
+        {/* ---------------- Side Bar button navigaton to About page ---------------- */}
+        {cityInfo && (
+          <div
+            onClick={handleNavigate}
+            className="mt-4 p-2 bg-blue-700 rounded hover:bg-blue-600 transition-colors text-center cursor-pointer"
+          >
+            <span className="text-white font-semibold">
+              More About {cityInfo?.title}
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Map */}
-      <div className="w-full md:w-2/3 h-[400px] md:h-full rounded-2xl overflow-hidden">
+      {/* ---------------- Map section ---------------- */}
+      <div className="w-full md:w-2/3 h-[400px] md:h-full overflow-hidden rounded-b-2xl md:rounded-r-2xl">
         <MapContainer
           center={mapPosition}
           zoom={13}
@@ -105,15 +187,19 @@ const Map = () => {
           className="w-full h-full"
         >
           <MapUpdater position={mapPosition} />
+
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+
           <Marker position={mapPosition}>
             <Popup>
               {mapPosition[0].toFixed(4)}, {mapPosition[1].toFixed(4)}
             </Popup>
           </Marker>
+
+          {route && <Polyline positions={route} color="red" weight={4} />}
         </MapContainer>
       </div>
     </div>

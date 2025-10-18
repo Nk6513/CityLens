@@ -1,6 +1,19 @@
 import React, { useState } from "react";
+
+
+  //--------------------------------------------------
+  // Homepage Component
+  // --------------------------------------------------  
 const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
+
+  // --------------------------------------------------
+  // Local State
+  // --------------------------------------------------
   const [isFocused, setIsFocused] = useState(false);
+
+  // --------------------------------------------------
+  // Handler
+  // --------------------------------------------------
   const handleSubmit = (e) => {
     e.preventDefault();
     onSearch();
@@ -8,7 +21,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center from-blue-100">
-      {/* Hero Section */}
+      {/* ---------------- Hero Section ---------------- */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold text-blue-800 mb-4">
           Welcome to CityLens
@@ -18,12 +31,12 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
         </p>
       </div>
 
-      {/* Search Bar */}
+      {/* ---------------- Search Bar ---------------- */}
       <form
         onSubmit={handleSubmit}
         className="flex w-full max-w-md shadow-lg rounded-full overflow-hidden border border-gray-300"
       >
-        {/* Search Icon (inline SVG) */}
+        {/* ---------------- Search Icon ---------------- */}
         <div className="flex items-center pl-4 text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +61,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
           placeholder="Enter city..."
           className="flex-grow px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
-
+        {/* ---------------- Render input box based on focus and value ---------------- */}
         {isFocused && value && (
           <button
             type="button"
@@ -74,7 +87,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
         </p>
       )}
 
-      {/* Hero Image */}
+      {/* ---------------- Hero Image ---------------- */}
       <div className="mt-12 w-full max-w-lg">
         <img
           src="/city-illustration.svg"

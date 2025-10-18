@@ -1,6 +1,17 @@
 import { Link } from "react-router-dom";
+import { useLocation } from "../LocationContext";
 
-const WeatherCard = ({ weatherData, error, showAlert }) => {
+// ---------------------------------------------------------------
+// WeatherCard Component
+// ---------------------------------------------------------------
+
+const WeatherCard = ({ error, showAlert }) => {
+  // --------------------------------------------------
+  // Extact context
+  // --------------------------------------------------
+
+  const { weatherData } = useLocation();
+
   // --------------------------------------------------
   // Handle error when no city is found
   // --------------------------------------------------
@@ -14,10 +25,12 @@ const WeatherCard = ({ weatherData, error, showAlert }) => {
 
   if (!weatherData) {
     return (
-      <div className="flex justify-center items-center mt-10">
-        <p className="text-gray-600 text-lg">
-          No city selected yet. Search a city on the homepage to see details.
-        </p>
+      <div className="flex justify-center mt-10 px-4">
+        <div className="flex items-center border-l-4 border-blue-700 bg-blue-400 px-6 py-4 rounded-r-lg shadow-md max-w-xl">
+          <p className="text-md font-semibold leading-relaxed font-sans text-white-900">
+            No city selected yet. Search a city on the homepage to see details.
+          </p>
+        </div>
       </div>
     );
   }
@@ -33,7 +46,7 @@ const WeatherCard = ({ weatherData, error, showAlert }) => {
   const rawdate = weatherData?.coord?.dt || weatherData.dt;
   const date = new Date(rawdate * 1000);
   const windSpeedMps = weatherData?.wind?.speed;
-  const windSpeedKmh = windSpeedMps * 3.6;  
+  const windSpeedKmh = windSpeedMps * 3.6;
   const weather = weatherData?.weather?.[0];
   const icon = weather?.icon;
   const description = weather?.weather?.[0]?.description?.toLowerCase();
@@ -96,18 +109,18 @@ const WeatherCard = ({ weatherData, error, showAlert }) => {
   // --------------------------------------------------
   return (
     <div className="relative max-w-4xl w-full bg-gradient-to-r from-blue-400 via-blue-90 to-white shadow-2xl rounded-2xl p-10 m-6 text-center">
-      {/* Ribbon */}
+      {/* ---------------- Show alert in Ribbon ---------------- */}
       {showAlert && (
         <div
           className={`absolute top-0 left-0 w-full py-2 rounded-t-xl rounded-b-none overflow-hidden ${
             colorMap[alerts[0].type]
           }`}
         >
-          <div className="font-bold text-center">
-            {alerts[0].message}
-          </div>
+          <div className="font-bold text-center">{alerts[0].message}</div>
         </div>
       )}
+
+      {/* ---------------- Render weather forecast about the serached city ---------------- */}
 
       <h2 className="text-4xl font-extrabold mb-2 pt-12 sm:pt-6 text-blue-900">
         {cityName}, {country}
@@ -117,9 +130,16 @@ const WeatherCard = ({ weatherData, error, showAlert }) => {
         <p className="text-lg text-gray-600 mb-4">{date.toLocaleString()}</p>
       )}
 
-      <p className="text-xl text-gray-700 mb-6">
-        {weather?.description} • {temp}°C
-      </p>
+      {lat && lon && (
+        <p className="text-xs text-center mb-6">
+          <span className="inline-flex items-center bg-blue-500 text-white font-semibold px-3 py-1.5 shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg">
+            📍{" "}
+            <Link to={`/map/${lat}/${lon}`} className="ml-2">
+              <button className="font-semibold">View on Map</button>
+            </Link>
+          </span>
+        </p>
+      )}
 
       {icon && (
         <div className="flex justify-center items-center mb-6">
@@ -131,14 +151,9 @@ const WeatherCard = ({ weatherData, error, showAlert }) => {
         </div>
       )}
 
-      {lat && lon && (
-        <p className="text-sm text-blue-600 text-center mb-6">
-          📍{" "}
-          <Link to={`/map/${lat}/${lon}`}>
-            <button className="map-btn">View on Map</button>
-          </Link>
-        </p>
-      )}
+       <p className="text-xl text-gray-700 mb-6">
+        {weather?.description} • {temp}°C
+      </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-gray-700 mt-6">
         <div>

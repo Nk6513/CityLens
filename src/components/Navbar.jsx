@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 
+// ---------------------------------------------------------------
+// Navbar Component
+// ---------------------------------------------------------------
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -8,7 +11,7 @@ const Navbar = () => {
     <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo */}
+          {/*---------- logo ----------*/}
           <Link to="/" className="flex items-center space-x-2">
             <img
               onClick={() => (window.location.href = "/")}
