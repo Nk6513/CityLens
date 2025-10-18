@@ -127,14 +127,20 @@ const WeatherCard = ({ error, showAlert }) => {
       </h2>
 
       {date && (
-        <p className="text-lg text-gray-600 mb-4">{date.toLocaleString()}</p>
+        <p className="text-lg text-gray-600 mb-4">
+          {date.toLocaleDateString("en-US", {
+            weekday: "long", // Friday
+            month: "long", // March
+            day: "numeric", // 15
+            year: "numeric", // 2025
+          })}
+        </p>
       )}
 
-      {lat && lon && (
+      {lat && lon && showAlert && (
         <p className="text-xs text-center mb-6">
-          <span className="inline-flex items-center bg-blue-500 text-white font-semibold px-3 py-1.5 shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg">
-            📍{" "}
-            <Link to={`/map/${lat}/${lon}`} className="ml-2">
+          <span className="inline-flex items-center bg-blue-500 text-white text-center font-semibold px-3 py-1.5 shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg">
+            <Link to={`/map/${lat}/${lon}`}>
               <button className="font-semibold">View on Map</button>
             </Link>
           </span>
@@ -151,7 +157,7 @@ const WeatherCard = ({ error, showAlert }) => {
         </div>
       )}
 
-       <p className="text-xl text-gray-700 mb-6">
+      <p className="text-xl text-gray-700 mb-6">
         {weather?.description} • {temp}°C
       </p>
 

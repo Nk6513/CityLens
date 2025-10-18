@@ -143,7 +143,7 @@ const Map = () => {
             {searchValue}
           </h4>
         ) : (
-          <div className="flex items-center justify-center w-full p-3 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-200 rounded-xl shadow-inner animate-pulse">
+          <div className="flex items-center justify-center w-full p-3 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-500 rounded-xl shadow-inner animate-pulse">
             <span className="text-gray-900 text-base font-medium">
               No city searched yet
             </span>

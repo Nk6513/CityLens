@@ -59,7 +59,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder="Enter city..."
-          className="flex-grow px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="flex-grow px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 min-w-0"
         />
         {/* ---------------- Render input box based on focus and value ---------------- */}
         {isFocused && value && (
@@ -75,7 +75,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-3 hover:bg-blue-700 transition-colors font-semibold"
+          className="bg-blue-600 text-white px-6 py-3 hover:bg-blue-700 transition-colors font-semibold flex-shrink-0"
         >
           Search
         </button>

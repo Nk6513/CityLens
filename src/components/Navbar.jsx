@@ -8,18 +8,18 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md sticky fixed top-0 left-0 w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-4">
         <div className="flex justify-between h-16 items-center">
           {/*---------- logo ----------*/}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
             <img
               onClick={() => (window.location.href = "/")}
               src="/cityLens.svg"
               alt="Logo"
               width={100}
               height={100}
-              className="cursor-pointer"
+              className="h-20 w-32 object-contain cursor-pointer"
             />
           </Link>
 

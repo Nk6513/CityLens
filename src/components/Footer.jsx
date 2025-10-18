@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 // ---------------------------------------------------------------
 const Footer = () => {
   return (
-    <footer className="bg-blue-600 text-white py-6">
+    <footer className="bg-gradient-to-r from-blue-500 to-indigo-600  py-6">
       <div className="max-w-3xl mx-auto text-center">
-        <p className="mb-2">&copy; 2025 CityLens. All rights reserved.</p>
+        <p className="mb-2 text-white">&copy; 2025 CityLens. All rights reserved.</p>
       </div>
     </footer>
   );

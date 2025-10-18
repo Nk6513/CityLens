@@ -127,6 +127,7 @@ function AppContent() {
   // Render Routes
   // ---------------------------------------------------------------
   return (
+    <div className="overflow-y-scroll min-h-screen">
     <Routes>
       {/* ---------------- Home Page ---------------- */}
       <Route
@@ -179,5 +180,6 @@ function AppContent() {
         }
       />
     </Routes>
-  );
+    </div>
+  ); 
 }
