@@ -1,7 +1,7 @@
 import { useCoordinates } from "../coordContext";
 
 const About = ({ cityInfo }) => {
-  const { coordinates } = useCoordinates(); // ✅ access global coordinates if needed
+  const { coordinates } = useCoordinates(); // global coordinates
 
   console.log("Global coordinates from context:", coordinates);
 

@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 // Import Components
 // ---------------------------------------------------------------
 import WeatherCard from "./components/WeatherCard";
-import AlertsPanel from "./components/AlertsPanel";
 import Map from "./components/Map";
 import About from "./components/About";
 import MainLayout from "./components/MainLayout";
@@ -31,7 +30,7 @@ export default function App() {
   const [weatherData, setWeatherData] = useState(null);
   const [coordinates, setCoordinates] = useState(null);
   const [error, setError] = useState("");
-  const [showAlert, setShowAlert] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
   const [cityInfo, setCityInfo] = useState(null);
 
   const navigate = useNavigate();
@@ -130,13 +129,13 @@ export default function App() {
   // ----------------------------------------------------------------
   // Hide Alert Panel
   // ----------------------------------------------------------------
-   useEffect(() => {
-      const setAlert = setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
+  //  useEffect(() => {
+  //     const setAlert = setTimeout(() => {
+  //       setShowAlert(false);
+  //     }, 3000);
 
-      return () => clearTimeout(setAlert);
-      }, [showAlert]);
+  //     return () => clearTimeout(setAlert);
+  //     }, [showAlert]);
 
 
   // ----------------------------------------------------------------
@@ -174,18 +173,10 @@ export default function App() {
           path="/weather"
           element={
             <MainLayout coordinates={coordinates}>
-              
-
-                {/* Alerts */}
-                {weatherData && !error && (
-                  <AlertsPanel weatherData={weatherData} showAlert={showAlert} />
-                )}
-
                 {/* Weather Card */}
                 <div className="flex justify-center">
-                  <WeatherCard weatherData={weatherData} error={error} />
+                  <WeatherCard weatherData={weatherData} showAlert={showAlert} error={error} />
                 </div>
-              
             </MainLayout>
           }
         />
