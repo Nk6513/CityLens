@@ -133,7 +133,7 @@ const Map = () => {
   // Render
   // ---------------------------------------------------------------
   return (
-    <div className="w-full max-w-full h-auto md:h-[500px] rounded-2xl shadow-lg flex flex-col md:flex-row overflow-hidden">
+    <div className="w-full max-w-full h-auto md:h-[500px] rounded-2xl shadow-lg flex flex-col md:flex-row">
       {/* ---------------- Side Bar on Map ---------------- */}
       <div className="w-full md:w-1/3 p-4 flex flex-col bg-gradient-to-b from-blue-300 to-blue-500 text-white shadow-lg overflow-auto">
         <h2 className="text-lg font-bold text-blue-800 mb-4">Location</h2>
