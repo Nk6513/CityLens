@@ -5,7 +5,7 @@ import React, { useState } from "react";
 // --------------------------------------------------
 const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
   // --------------------------------------------------
-  // Local State
+  // Local State - tracking focus for input box
   // --------------------------------------------------
   const [isFocused, setIsFocused] = useState(false);
 
@@ -38,7 +38,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
         <div className="flex items-center pl-4 text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-10 sm:visible invisible" // 👈 key change
+            className="h-5 w-10 md:visible invisible" // 👈 key change
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -73,14 +73,16 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 md:px-6 py-3 hover:bg-blue-700 transition-colors font-semibold flex-shrink-0 flex items-center justify-center"
+          className="bg-blue-600 text-white px-4 md:px-6 py-3 hover:bg-blue-700 transition-colors font-semibold flex-shrink-0 flex items-center justify-center min-w-[90px] md:min-w-[110px]"
         >
-          {/* Text visible on medium+ screens */}
-          <span className="hidden sm:inline md:inline">Search</span>
+          {/*---------- Text visible on medium+ screens ----------*/}
+          <span className="md:visible invisible text-center">
+            Search
+          </span>
 
-          {/* Icon visible on small screens */}
+          {/*---------- Icon visible on small screens ----------*/}
           <svg
-            className="w-5 h-5 inline md:hidden w-5 h-5 inline sm:hidden"
+            className="w-5 h-5 md:invisible visible  absolute"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}

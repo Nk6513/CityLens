@@ -8,7 +8,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md sticky fixed top-0 left-0 w-full z-50">
+    <nav className="bg-gradient-to-r from-blue-500 to-indigo-600 shadow-md sticky top-0 left-0 w-full z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-4">
         <div className="flex justify-between h-16 items-center">
           {/*---------- logo ----------*/}
@@ -27,7 +27,7 @@ const Navbar = () => {
           </Link>
 
           {/*---------- Desktop Links ----------*/}
-          <div className="hidden sm:flex space-x-6">
+          <div className="hidden md:flex space-x-6">
             <NavLink
               to="/"
               className={({ isActive }) =>

@@ -116,7 +116,7 @@ const WeatherCard = ({ error, showAlert }) => {
             colorMap[alerts[0].type]
           }`}
         >
-          <div className="font-bold text-center">{alerts[0].message}</div>
+          <div className="text-center">{alerts[0].message}</div>
         </div>
       )}
 
@@ -137,10 +137,10 @@ const WeatherCard = ({ error, showAlert }) => {
         </p>
       )}
 
-      {lat && lon && showAlert && (
+      {lat && lon && (
         <p className="text-xs text-center mb-6">
           <span className="inline-flex items-center bg-blue-500 text-white text-center font-semibold px-3 py-1.5 shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg">
-            <Link to={`/map/${lat}/${lon}`}>
+            <Link to="/map">
               <button className="font-semibold">View on Map</button>
             </Link>
           </span>
