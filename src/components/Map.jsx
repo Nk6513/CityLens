@@ -87,7 +87,7 @@ const Map = () => {
         fetchRoute(userLocation, [coordinates.lat, coordinates.lon]);
       }
     }
-    fetchRef.current(true); // Mark fetch as done to prevent duplicate calls (e.g., React Strict Mode)
+    fetchRef.current = true; // Mark fetch as done to prevent duplicate calls (e.g., React Strict Mode)
   }, [cityInfo, userLocation, coordinates]);
 
   // ---------------------------------------------------------------
