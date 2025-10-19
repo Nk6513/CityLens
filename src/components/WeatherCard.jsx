@@ -108,7 +108,7 @@ const WeatherCard = ({ error, showAlert }) => {
   // Render
   // --------------------------------------------------
   return (
-    <div className="relative max-w-4xl w-full bg-gradient-to-r from-blue-400 via-blue-90 to-white shadow-2xl rounded-2xl p-10 m-6 text-center">
+    <div className="relative max-w-4xl w-full bg-gradient-to-r from-blue-400 via-blue-90 to-white shadow-2xl rounded-2xl p-6 sm:p-10 m-4 sm:m-6 text-center mx-auto">
       {/* ---------------- Show alert in Ribbon ---------------- */}
       {showAlert && (
         <div

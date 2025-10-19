@@ -10,7 +10,6 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useLocation } from "../LocationContext";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
 
 // ---------------------------------------------------------------
 // MapUpdater: Recenter map when position changes
@@ -75,10 +74,9 @@ const Map = () => {
   // Update map when coordinates or cityInfo changes
   // ---------------------------------------------------------------
 
-  // Ref to track if the fetch has already been done
-  const fetchRef = useRef(false);
+
   useEffect(() => {
-    if(!coordinates || !fetchRef.current) return;
+    if(!coordinates) return;
     if (coordinates) {
       setMapPosition([coordinates.lat, coordinates.lon]);
       fetchCityByCoords(cityInfo);
@@ -87,7 +85,6 @@ const Map = () => {
         fetchRoute(userLocation, [coordinates.lat, coordinates.lon]);
       }
     }
-    fetchRef.current = true; // Mark fetch as done to prevent duplicate calls (e.g., React Strict Mode)
   }, [cityInfo, userLocation, coordinates]);
 
   // ---------------------------------------------------------------
