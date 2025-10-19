@@ -38,7 +38,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
         <div className="flex items-center pl-4 text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-10 hidden sm:block"
+            className="h-5 w-10 sm:visible invisible" // 👈 key change
             viewBox="0 0 20 20"
             fill="currentColor"
           >
