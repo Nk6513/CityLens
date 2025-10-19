@@ -38,7 +38,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
         <div className="flex items-center pl-4 text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-10 md:visible invisible" // 👈 key change
+            className="h-5 w-10 md:visible" 
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -76,12 +76,12 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
           className="bg-blue-600 text-white px-4 md:px-6 py-3 hover:bg-blue-700 transition-colors font-semibold flex-shrink-0 flex items-center justify-center min-w-[90px] md:min-w-[110px]"
         >
           {/*---------- Text visible on medium+ screens ----------*/}
-          <span className="md:visible invisible text-center">
+          <span className="md:visible text-center">
             Search
           </span>
 
           {/*---------- Icon visible on small screens ----------*/}
-          <svg
+          {/* <svg
             className="w-5 h-5 md:invisible visible  absolute"
             fill="none"
             stroke="currentColor"
@@ -94,7 +94,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
               strokeLinejoin="round"
               d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
             />
-          </svg>
+          </svg> */}
         </button>
       </form>
 
