@@ -12,10 +12,13 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-4 lg:px-4">
         <div className="flex justify-between h-16 items-center">
           {/*---------- logo ----------*/}
-          <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
+          <Link
+            to="/"
+            className="flex items-center space-x-2 flex-shrink-0 ml-4"
+          >
             <img
               onClick={() => (window.location.href = "/")}
-              src="/cityLens.svg"
+              src="/logo_old.svg"
               alt="Logo"
               width={100}
               height={100}
@@ -24,7 +27,7 @@ const Navbar = () => {
           </Link>
 
           {/*---------- Desktop Links ----------*/}
-          <div className="hidden md:flex space-x-6">
+          <div className="hidden sm:flex space-x-6">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -110,7 +113,7 @@ const Navbar = () => {
             Home
           </NavLink>
 
-           <NavLink
+          <NavLink
             to="/weather"
             onClick={() => setIsOpen(false)}
             className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-indigo-500"

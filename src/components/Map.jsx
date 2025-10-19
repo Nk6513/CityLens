@@ -82,7 +82,7 @@ const Map = () => {
         fetchRoute(userLocation, [coordinates.lat, coordinates.lon]);
       }
     }
-  }, [coordinates, userLocation]);
+  }, [cityInfo, userLocation]);
 
   // ---------------------------------------------------------------
   // Set city name from Wikipedia data
@@ -143,8 +143,8 @@ const Map = () => {
             {searchValue}
           </h4>
         ) : (
-          <div className="flex items-center justify-center w-full p-3 bg-gradient-to-r from-blue-500 via-blue-500 to-blue-500 rounded-xl shadow-inner animate-pulse">
-            <span className="text-gray-900 text-base font-medium">
+          <div className="flex items-center border-l-4 border-blue-700 bg-blue-400 px-6 py-4 rounded-r-lg shadow-md max-w-xl">
+            <span className="text-md font-semibold leading-relaxed font-sans text-gray-900">
               No city searched yet
             </span>
           </div>
@@ -152,13 +152,13 @@ const Map = () => {
 
         {/* ---------------- Route Info ---------------- */}
         {isRouteLoading ? (
-          <div className="mt-4 flex items-center justify-center space-x-1">
+          <div className="mt-4 flex items-center justify-center space-x-1 w-full">
             <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
             <span className="w-2 h-2 bg-blue-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
             <span className="w-2 h-2 bg-blue-300 rounded-full animate-bounce"></span>
           </div>
         ) : routeInfo ? (
-          <div className="mt-4 p-2 bg-blue-700 rounded shadow-md">
+          <div className="mt-4 p-2 sm:p-4 bg-blue-700 rounded shadow-md w-full">
             <h3 className="font-semibold text-white mb-1">Route Info</h3>
             <p className="text-blue-100">Distance: {routeInfo.distance} km</p>
             <p className="text-blue-100">Duration: {routeInfo.duration} min</p>

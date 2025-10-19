@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 
-
-  //--------------------------------------------------
-  // Homepage Component
-  // --------------------------------------------------  
+//--------------------------------------------------
+// Homepage Component
+// --------------------------------------------------
 const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
-
   // --------------------------------------------------
   // Local State
   // --------------------------------------------------
@@ -40,7 +38,7 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
         <div className="flex items-center pl-4 text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-10"
+            className="h-5 w-10 hidden sm:block"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -75,12 +73,29 @@ const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white px-6 py-3 hover:bg-blue-700 transition-colors font-semibold flex-shrink-0"
+          className="bg-blue-600 text-white px-4 md:px-6 py-3 hover:bg-blue-700 transition-colors font-semibold flex-shrink-0 flex items-center justify-center"
         >
-          Search
+          {/* Text visible on medium+ screens */}
+          <span className="hidden sm:inline md:inline">Search</span>
+
+          {/* Icon visible on small screens */}
+          <svg
+            className="w-5 h-5 inline md:hidden w-5 h-5 inline sm:hidden"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
+            />
+          </svg>
         </button>
       </form>
-    
+
       {error && value && (
         <p className="mt-2 text-sm sm:text-base font-medium text-red-700 bg-red-100 border border-red-300 rounded-md px-3 py-2 flex items-center gap-2">
           <span className="text-lg">⚠️</span> {error}
