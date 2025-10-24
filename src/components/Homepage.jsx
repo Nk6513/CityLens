@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 //--------------------------------------------------
 // Homepage Component
-// --------------------------------------------------
+// -------------------------------------------------
 const Homepage = ({ value, onChange, onSearch, error, clearInput }) => {
   // --------------------------------------------------
   // Local State - tracking focus for input box

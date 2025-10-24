@@ -8,6 +8,8 @@ const About = () => {
   // Access global context
   // ---------------------------------------------------------------
   const { cityInfo } = useLocation();
+  console.log("City Info:", cityInfo);
+
 
   // ---------------------------------------------------------------
   // If no city is selected yet
