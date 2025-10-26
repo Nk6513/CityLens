@@ -31,7 +31,7 @@ export default function App() {
 // AppContent (logic moved inside provider)
 // ---------------------------------------------------------------
 function AppContent() {
-  const { setCoordinates, setCityInfo, setWeatherData} = useLocation(); 
+  const { setCoordinates, setCityInfo, setWeatherData } = useLocation();
   const [inputSearch, setInputSearch] = useState("");
   const [error, setError] = useState("");
   const [showAlert, setShowAlert] = useState(false);
@@ -73,9 +73,13 @@ function AppContent() {
     }
   };
 
-  // ------------------------------------------------------------
+  // ============================================================
   // API Calls
-  // ------------------------------------------------------------
+  // ============================================================
+
+  // -------------------------------------------------------------
+  // Fetch Weather Api
+  // -------------------------------------------------------------
   const fetchWeather = async (city) => {
     const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
@@ -84,37 +88,71 @@ function AppContent() {
       const response = await fetch(url);
       if (!response.ok) throw new Error("City not found");
       return await response.json();
-      
     } catch (error) {
       console.error(error);
       return null;
     }
   };
 
-  const fetchCityInfo = async (cityName) => {
-    try {
-      const wikiRes = await fetch(
-        `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageprops&exintro&titles=${encodeURIComponent(
-          cityName
-        )}`
-      );
-      const wikiData = await wikiRes.json();
-      const pages = wikiData?.query?.pages;
-      if (!pages) return null;
 
-      const pageId = Object.keys(pages)[0];
-      if (pageId && pages[pageId]) {
-        return {
-          title: pages[pageId].title,
-          extract: pages[pageId].extract,
-        };
-      }
-      return null;
-    } catch (err) {
-      console.error(err);
+  // -------------------------------------------------------------
+  // Fetch Wikipedia Api
+  // -------------------------------------------------------------
+  
+const fetchCityInfo = async (cityName) => {
+  // helper function to check if the extract mentions city-related terms
+  const isCityExtract = (text) => {
+    if (!text) return false; // <-- safety check to prevent undefined errors
+    const cityKeywords = [
+      "city",
+      "town",
+      "municipality",
+      "capital",
+      "village",
+      "urban area",
+    ];
+    return cityKeywords.some((word) =>
+      text.toLowerCase().includes(word.toLowerCase())
+    );
+  };
+
+  try {
+    const wikiRes = await fetch(
+      `https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=extracts|pageprops&exintro&titles=${encodeURIComponent(
+        cityName
+      )}`
+    );
+
+    const wikiData = await wikiRes.json();
+    const pages = wikiData?.query?.pages;
+    console.log(pages);
+    if (!pages) return null;
+
+    // Get the first page object
+    const pageId = Object.keys(pages)[0];
+    const page = pages[pageId];
+
+    if (!page || !isCityExtract(page.extract)) {
+      // console.warn(`Not a city: ${page?.title}`);
       return null;
     }
-  };
+
+    // Checking image in pages
+    const imageFile = page.pageprops?.page_image_free;
+    const imageUrl = imageFile ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(
+          imageFile
+        )}` : null;
+
+    return {
+      title: page.title,
+      extract: page.extract, // wikipedia page
+      image: imageUrl,
+    };
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
 
   // -------------------------------------------------------------
   // Remove focus when app loads
@@ -150,10 +188,7 @@ function AppContent() {
         element={
           <MainLayout>
             <div className="flex justify-center">
-              <WeatherCard
-                showAlert={showAlert}
-                error={error}
-              />
+              <WeatherCard showAlert={showAlert} error={error} />
             </div>
           </MainLayout>
         }
@@ -179,5 +214,5 @@ function AppContent() {
         }
       />
     </Routes>
-  ); 
+  );
 }
